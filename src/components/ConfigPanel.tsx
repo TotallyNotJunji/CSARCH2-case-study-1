@@ -2,7 +2,7 @@
 // hit time, miss penalty) and a test-case selector (sequential / mid-repeat-reverse / random).
 // Accepts CacheConfig + TestCase props and calls onChange / onTestCaseChange on edit.
 import { useState } from "react";
-import { CacheConfig, ReadPolicy, TestCase } from "../engine/types";
+import { CacheConfig, ReadPolicy, SETSIZE, TestCase } from "../engine/types";
 
 // optional props
 interface Props {
@@ -10,16 +10,16 @@ interface Props {
   test_props?: TestCase;
 }
 
+const BLOCKSIZELIMIT = 5;
+const BLOCKCOUNTLIMIT = BLOCKSIZELIMIT;
+
 export default function ConfigPanel({ cache_props, test_props }: Props) {
   //state constants, accepts props if given
   const [blockSizeExp, setBlockSizeExp] = useState<number>(
     cache_props?.blockSize ?? 1,
   );
   const [blockCountExp, setBlockCountExp] = useState<number>(
-    cache_props?.blockCount ?? 2,
-  );
-  const [setCountExp, setSetCountExp] = useState<number>(
-    cache_props?.setCount ?? 0,
+    cache_props?.blockCount ?? 3,
   );
   const [readPolicy, setReadPolicy] = useState<ReadPolicy | null>(
     cache_props?.readPolicy ?? null,
@@ -33,15 +33,13 @@ export default function ConfigPanel({ cache_props, test_props }: Props) {
   //computed constants
   const blockSize = Math.pow(2, blockSizeExp);
   const blockCount = Math.pow(2, blockCountExp);
-  const setCount = Math.pow(2, setCountExp);
+  const setCount = blockCount / SETSIZE;
 
   // function for handling the change of blockCount
   // since setCount should not exceed blockCount
   const handleBlockCountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newExp = Number(e.target.value);
     setBlockCountExp(newExp);
-    // clamp setCount exponent so it doesn't exceed blockCount exponent
-    setSetCountExp((prev) => Math.min(prev, newExp));
   };
 
   //TO-DO: implement this later
@@ -73,7 +71,7 @@ export default function ConfigPanel({ cache_props, test_props }: Props) {
             type="range"
             id="block_size"
             min={1}
-            max={5}
+            max={BLOCKSIZELIMIT}
             step={1}
             value={blockSizeExp}
             onChange={(e) => setBlockSizeExp(Number(e.target.value))}
@@ -100,8 +98,8 @@ export default function ConfigPanel({ cache_props, test_props }: Props) {
           <input
             type="range"
             id="block_count"
-            min={2}
-            max={5}
+            min={3}
+            max={BLOCKCOUNTLIMIT}
             step={1}
             value={blockCountExp}
             onChange={handleBlockCountChange}
@@ -117,16 +115,6 @@ export default function ConfigPanel({ cache_props, test_props }: Props) {
           >
             Set count: {setCount}
           </label>
-          <input
-            type="range"
-            id="set_count"
-            min={0}
-            max={blockCountExp}
-            step={1}
-            value={setCountExp ?? undefined}
-            onChange={(e) => setSetCountExp(Number(e.target.value))}
-            className="w-full h-2 bg-neutral-200 rounded-lg appearance-none cursor-pointer accent-neutral-600"
-          />
         </div>
 
         {/* Read policy */}
