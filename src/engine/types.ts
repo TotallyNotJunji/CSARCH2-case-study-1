@@ -90,3 +90,10 @@ export interface SimulationResult {
   trace: TraceEntry[]
   stats: Stats
 }
+
+// constant value for number of blocks in a set
+// in 8-way BSA, each set has 8 blocks
+export const SETSIZE = 8
+
+// constant value for number of words in the main memory
+export const MAINMEMSIZE = 1024
