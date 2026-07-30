@@ -39,6 +39,41 @@ export function createCache(config: CacheConfig) {
   return cacheSets;
 }
 
+// Parameters / interface for pluggable replacement policies
+export interface ReplacementPolicy {
+  readonly name: "LRU" | "MRU";
+  onAccess(set: Set, wayIndex: number, accessNumber: number): void;
+  selectVictim(set: Set): number;
+}
+
+export class LRUPolicy implements ReplacementPolicy {
+  readonly name = "LRU" as const;
+  onAccess(set: Set, wayIndex: number, accessNumber: number): void {
+    set.lines[wayIndex].lastUsed = accessNumber;
+  }
+  selectVictim(set: Set): number {
+    let victim = 0;
+    for (let i = 1; i < set.lines.length; i++) {
+      if (set.lines[i].lastUsed < set.lines[victim].lastUsed) victim = i;
+    }
+    return victim;
+  }
+}
+
+export class MRUPolicy implements ReplacementPolicy {
+  readonly name = "MRU" as const;
+  onAccess(set: Set, wayIndex: number, accessNumber: number): void {
+    set.lines[wayIndex].lastUsed = accessNumber;
+  }
+  selectVictim(set: Set): number {
+    let victim = 0;
+    for (let i = 1; i < set.lines.length; i++) {
+      if (set.lines[i].lastUsed > set.lines[victim].lastUsed) victim = i;
+    }
+    return victim;
+  }
+}
+
 //finds the block index where new data will be inserted
 //  params: cache - cache representation,
 //          setIndex - index of cache set to be accessed
@@ -114,6 +149,7 @@ export function accessAddress(
   blockNumber: number,
   accessNumber: number,
   config: CacheConfig,
+  policy?: ReplacementPolicy,
 ) {
   // modulo here to find which set we will modify
   const setIndex = blockNumber % cache.length;
@@ -125,7 +161,11 @@ export function accessAddress(
   for (let i = 0; i < cache[setIndex].lines.length; i++) {
     // hit
     if (cache[setIndex].lines[i].tag == tag && cache[setIndex].lines[i].valid) {
-      cache[setIndex].lines[i].lastUsed = accessNumber;
+      if (policy) {
+        policy.onAccess(cache[setIndex], i, accessNumber);
+      } else {
+        cache[setIndex].lines[i].lastUsed = accessNumber;
+      }
 
       const traceEntry: TraceEntry = {
         address: blockNumber,
@@ -140,7 +180,16 @@ export function accessAddress(
   }
 
   //run when miss
-  const replacementIndex = findReplacementIndex(cache, setIndex, config);
+  let replacementIndex: number;
+  if (policy) {
+    let found = -1;
+    for (let i = 0; i < cache[setIndex].lines.length; i++) {
+      if (!cache[setIndex].lines[i].valid) { found = i; break; }
+    }
+    replacementIndex = found >= 0 ? found : policy.selectVictim(cache[setIndex]);
+  } else {
+    replacementIndex = findReplacementIndex(cache, setIndex, config);
+  }
 
   //put in new data and evict old data (if needed)
   const isValid = cache[setIndex].lines[replacementIndex].valid;
@@ -150,7 +199,12 @@ export function accessAddress(
   cache[setIndex].lines[replacementIndex].tag = tag;
   cache[setIndex].lines[replacementIndex].valid = true;
   cache[setIndex].lines[replacementIndex].dirty = false;
-  cache[setIndex].lines[replacementIndex].lastUsed = accessNumber;
+
+  if (policy) {
+    policy.onAccess(cache[setIndex], replacementIndex, accessNumber);
+  } else {
+    cache[setIndex].lines[replacementIndex].lastUsed = accessNumber;
+  }
 
   const traceEntry: TraceEntry = {
     address: blockNumber,
