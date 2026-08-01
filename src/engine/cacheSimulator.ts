@@ -7,8 +7,10 @@
 import {
   CacheConfig,
   TraceEntry,
+  SimulationResult,
   type Set,
 } from "./types";
+import { computeStats } from "./stats";
 
 // creates an empty cache set
 // params: config - settings of the cache
@@ -216,4 +218,34 @@ export function accessAddress(
   };
 
   return traceEntry;
+}
+
+// runs a full simulation: builds a fresh cache, feeds an entire address trace
+// (from sequences.ts) through accessAddress one block at a time, and packages
+// the resulting TraceEntry[] together with computed Stats into a SimulationResult.
+//   params: trace - ordered list of block numbers to access (e.g. from generateSequential)
+//           config - settings of the cache (block size, set count, ways, read policy, etc.)
+//           policy - the replacement policy to apply on misses (LRUPolicy or MRUPolicy)
+//   return: SimulationResult - { config, trace: TraceEntry[], stats: Stats }
+export function runSimulation(
+  trace: number[],
+  config: CacheConfig,
+  policy: ReplacementPolicy,
+): SimulationResult {
+  const cache = createCache(config);
+  const traceEntries: TraceEntry[] = [];
+
+  trace.forEach((blockNumber, index) => {
+    // accessNumber starts at 1 so lastUsed=0 always means "never touched"
+    const entry = accessAddress(cache, blockNumber, index + 1, config, policy);
+    traceEntries.push(entry);
+  });
+
+  const stats = computeStats(traceEntries, config);
+
+  return {
+    config,
+    trace: traceEntries,
+    stats,
+  };
 }
