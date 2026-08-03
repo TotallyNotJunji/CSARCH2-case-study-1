@@ -137,7 +137,7 @@ export default function CacheGridView({
                           </span>
                           <div className="flex items-center gap-1 ">
                             {cacheLine?.valid && (
-                              <span className="opacity-75">t={cacheLine.lastUsed}</span>
+                              <span className="opacity-75">time={cacheLine.lastUsed}</span>
                             )}
                           </div>
                         </div>
