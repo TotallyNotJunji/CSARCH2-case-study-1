@@ -3,6 +3,7 @@
 import { SimulationResult, Set } from "../engine/types";
 import CacheGridView from "./CacheGridView";
 import StatsPanel from "./StatsPanel";
+import TraceLog from "./TraceLog";
 
 interface ComparisonViewProps {
   lruResult: SimulationResult | null;
@@ -45,6 +46,11 @@ export default function ComparisonView({
 
         <StatsPanel stats={lruResult?.stats ?? null} />
 
+        <TraceLog
+          trace={lruResult?.trace || []}
+          currentStep={currentStep}
+        />
+
       </div>
 
       {/* MRU Side */}
@@ -70,6 +76,11 @@ export default function ComparisonView({
         />
 
         <StatsPanel stats={mruResult?.stats ?? null} />
+
+        <TraceLog
+          trace={lruResult?.trace || []}
+          currentStep={currentStep}
+        />
 
       </div>
     </div>
