@@ -133,7 +133,7 @@ export default function CacheGridView({
                       >
                         <div className="flex flex-col items-center">
                           <span className="font-semibold">
-                            {cacheLine?.valid ? `Mem:${cacheLine.tag}` : "-"}
+                            {cacheLine?.valid ? `Mem:${cacheLine.memBlockNumber ?? "-"}` : "-"}
                           </span>
                           <div className="flex items-center gap-1 ">
                             {cacheLine?.valid && (
