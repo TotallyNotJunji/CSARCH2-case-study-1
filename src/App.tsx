@@ -16,6 +16,7 @@ import {
   accessAddress,
   LRUPolicy,
   MRUPolicy,
+  ReplacementPolicy
 } from "./engine/cacheSimulator";
 import {
   generateSequential,
@@ -26,6 +27,18 @@ import ConfigPanel from "./components/ConfigPanel";
 import ComparisonView from "./components/ComparisonView";
 import PlaybackControls from "./components/PlaybackControls";
 
+function computeSetsAtStep(
+  trace: number[],
+  config: CacheConfig,
+  policy: ReplacementPolicy,
+  step: number
+): Set[] {
+  const cache = createCache(config);
+  for (let i = 0; i < step && i < trace.length; i++) {
+    accessAddress(cache, trace[i], i + 1, config, policy);
+  }
+  return cache;
+}
 
 export default function App() {
   return (
