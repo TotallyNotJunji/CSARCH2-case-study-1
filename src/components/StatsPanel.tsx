@@ -84,14 +84,6 @@ export default function StatsPanel({ stats }: StatsPanelProps) {
               </td>
             </tr>
             <tr>
-              <td className="py-2 px-3 font-medium">
-                AMAT (Average Memory Access Time)
-              </td>
-              <td className="py-2 px-3 font-normal text-right">
-                {stats.amat.toFixed(2)}
-              </td>
-            </tr>
-            <tr>
               <td className="py-2 px-3 font-medium">Total Access Time</td>
               <td className="py-2 px-3 font-normal text-right">
                 {stats.totalAccessTime}
@@ -101,6 +93,14 @@ export default function StatsPanel({ stats }: StatsPanelProps) {
               <td className="py-2 px-3 font-medium">Total Miss Penalty</td>
               <td className="py-2 px-3 font-normal text-right">
                 {stats.totalMissPenalty}
+              </td>
+            </tr>
+            <tr>
+              <td className="py-2 px-3 font-medium">
+                AMAT (Average Memory Access Time)
+              </td>
+              <td className="py-2 px-3 font-normal text-right">
+                {stats.amat.toFixed(2)}
               </td>
             </tr>
           </tbody>
