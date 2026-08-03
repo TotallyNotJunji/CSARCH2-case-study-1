@@ -25,7 +25,7 @@ export default function ComparisonView({
       {/* LRU Side */}
       <div className="flex flex-col gap-4 bg-white p-4 rounded-xl border border-white shadow-sm">
         <h2 className="font-bold flex items-center justify-between">
-          <span>8-Way BSA — LRU Policy</span>
+          <span>8-Way BSA: LRU Policy</span>
           {lruResult && (
             <span className="text-xs font-normal">
               Read: {lruResult.config.readPolicy}
@@ -56,7 +56,7 @@ export default function ComparisonView({
       {/* MRU Side */}
       <div className="flex flex-col gap-4 bg-white p-4 rounded-xl border-white shadow-sm">
         <h2 className="font-bold flex items-center justify-between">
-          <span>8-Way BSA — MRU Policy</span>
+          <span>8-Way BSA: MRU Policy</span>
           {mruResult && (
             <span className="text-xs font-normal">
               Read: {mruResult.config.readPolicy}
