@@ -6,31 +6,31 @@ import { ReplacementPolicy, Set } from "../engine/types";
 
 interface CacheGridViewProps {
   sets: Set[];
-  ways?: number;
+  blocks?: number;
   policy?: ReplacementPolicy;
   highlightSetIndex?: number;
 }
 
 export default function CacheGridView({
   sets,
-  ways,
+  blocks = 8,
   policy,
   highlightSetIndex,
 }: CacheGridViewProps) {
-  
+
   // find the target index
   // each s has 8 cache lines
   const getTargetIdx = (set: Set) => {
-    const validCacheLines = set.lines
+    const validCacheBlocks = set.lines
       .map((line, idx) => ({line, idx}))
       .filter((item) => item.line.valid);
 
-    if(validCacheLines.length === 0) return -1;
+    if(validCacheBlocks.length === 0) return -1;
 
     if(policy === "LRU") {
       // goes thru each valid cache line to find best minimum value then 
       // get index
-      let index = validCacheLines.reduce((min, curr) =>
+      let index = validCacheBlocks.reduce((min, curr) =>
         // if lastUsed is less than (less recent), keep
         curr.line.lastUsed < min.line.lastUsed ? curr : min
       ).idx
@@ -39,7 +39,7 @@ export default function CacheGridView({
     else if(policy === "MRU") {
       // goes thru each valid cache line to find best minimum value then 
       // get index
-      let index = validCacheLines.reduce((min, curr) =>
+      let index = validCacheBlocks.reduce((min, curr) =>
         // if lastUsed is more than (mor recent), keep
         curr.line.lastUsed > min.line.lastUsed ? curr : min
       ).idx
@@ -47,8 +47,8 @@ export default function CacheGridView({
     }
   }
   return (
-    <div>
-
+    <div className="flex flex-col gap-3 rounded-lg border border-neutral">
+      
     </div>
   );
 }
