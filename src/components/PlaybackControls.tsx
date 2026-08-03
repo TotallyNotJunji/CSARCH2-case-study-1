@@ -1,9 +1,31 @@
 // Playback navigation: play/pause auto-advance, step forward, reset to step 0,
 // scrubber slider (0..totalSteps), toggle between step-by-step and final snapshot view.
+interface PlaybackControlsProps {
+  currentStep: number; // current frame
+  totalSteps: number; // total frames
+  running: boolean;
+  showFinal: boolean; // final output aka end frame
+  onPlayPause: () => void;
+  onReset: () => void; // back to start
+  onToggleShowFinal: () => void;
+  onStepChange: (step: number) => void; // per frame scrubbing
+}
 
-
-export default function PlaybackControls() {
-
+export default function PlaybackControls({
+  currentStep,
+  totalSteps,
+  running,
+  showFinal,
+  onPlayPause,
+  onReset,
+  onToggleShowFinal,
+  onStepChange,
+}: PlaybackControlsProps) {
+  // check if at end
+  const isAtEnd = currentStep >= totalSteps;
+  // pause simulation
+  const noSimulation = totalSteps === 0;
+  
   return (
     <div className="flex flex-col mx-auto m-4 gap-3 rounded-lg border border-neutral-200 bg-neutral-50 p-6 text-xs w-full shadow-sm">
       {/* Scrubber Slider */}
