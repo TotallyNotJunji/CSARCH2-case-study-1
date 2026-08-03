@@ -50,7 +50,7 @@ export default function CacheGridView({
     <div className="flex flex-col gap-3 rounded-lg border border-neutral p-6 text-xs w-full">
       {/* Section Header */}
       <div className="flex items-center justify-between border-b pb-2">
-        <h3 className="font-bold text-sm"> Policy: {policy} - Current Cache Mapping</h3>
+        <h3 className="font-bold text-sm"> {policy} - Current Cache Mapping</h3>
         <div className="flex gap-3 text-xs">
           <span className="flex items-center gap-1">
             <span
