@@ -27,6 +27,7 @@ export function createCache(config: CacheConfig) {
     //initialize N cache lines for an N-Way BSA
     for (let j = 0; j < config.ways; j++) {
       const cacheLine = {
+        memBlockNumber: null,
         tag: null,
         valid: false,
         dirty: false,
@@ -199,6 +200,7 @@ export function accessAddress(
     ? cache[setIndex].lines[replacementIndex].tag!
     : undefined;
   cache[setIndex].lines[replacementIndex].tag = tag;
+  cache[setIndex].lines[replacementIndex].memBlockNumber = blockNumber;
   cache[setIndex].lines[replacementIndex].valid = true;
   cache[setIndex].lines[replacementIndex].dirty = false;
 
