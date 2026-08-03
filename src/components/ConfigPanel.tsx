@@ -53,7 +53,19 @@ export default function ConfigPanel({
 
   //TO-DO: implement this later
   const handleStartSimulation = () => {
-    // Placeholder
+    const updatedConfig: CacheConfig = {
+      ...config,
+      blockSize,
+      blockCount,
+      setCount,
+      ways: SETSIZE, // Fixed at 8-way BSA for Machine 9
+      readPolicy,
+      replacementPolicy: config?.replacementPolicy || "LRU",
+      hitTime: Math.max(0, hitTime),
+      missPenalty: Math.max(0, missPenalty),
+    };
+    onConfigChange(updatedConfig, testCase);
+
     console.log("Starting simulation with:", {
       blockSize,
       blockCount,
