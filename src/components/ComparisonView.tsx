@@ -2,6 +2,7 @@
 // right column shows the MRU result. Driven by lruResult and mruResult props.
 import { SimulationResult, Set } from "../engine/types";
 import CacheGridView from "./CacheGridView";
+import StatsPanel from "./StatsPanel";
 
 interface ComparisonViewProps {
   lruResult: SimulationResult | null;
@@ -41,6 +42,9 @@ export default function ComparisonView({
               : undefined
           }
         />
+
+        <StatsPanel stats={lruResult?.stats ?? null} />
+
       </div>
 
       {/* MRU Side */}
@@ -64,6 +68,9 @@ export default function ComparisonView({
               : undefined
           }
         />
+
+        <StatsPanel stats={mruResult?.stats ?? null} />
+
       </div>
     </div>
   );
