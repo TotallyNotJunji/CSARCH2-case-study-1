@@ -101,7 +101,56 @@ export default function App() {
   ), [trace, config, activeStep]
   );
 
-  
+  useEffect(() => {
+    if (!running) return;
+
+    if (currentStep >= totalSteps) {
+      setRunning(false);
+      return;
+    }
+
+    const timer = setInterval(() => {
+      setCurrentStep((prev) => {
+        if (prev + 1 >= totalSteps) {
+          setRunning(false);
+          return totalSteps;
+        }
+        return prev + 1;
+      });
+    }, 500);
+
+    return () => clearInterval(timer);
+  }, [running, currentStep, totalSteps]);
+
+  const handleConfigChange = (newConfig: CacheConfig, newTestCase: TestCase) => {
+    setRunning(false);
+    setShowFinal(false);
+    setCurrentStep(0);
+    setConfig(newConfig);
+    setTestCase(newTestCase);
+  };
+
+  const handlePlayPause = () => {
+    if (currentStep >= totalSteps) setCurrentStep(0);
+    setShowFinal(false);
+    setRunning((prev)=> !prev);
+  }
+
+  const handleReset = () => {
+    setRunning(false);
+    setShowFinal(false);
+    setCurrentStep(0);
+  }
+
+  const handleToggleShowFinal = () => {
+    setRunning(false);
+    setShowFinal((prev)=>!prev);
+  }
+
+  const handleStepChange = (step: number) => {
+    setCurrentStep(step);
+    setRunning(false);
+  }
 
   return (
     <h1 className="flex w-screen h-screen justify-center items-center text-3xl font-bold text-black">
