@@ -93,7 +93,7 @@ export default function TraceLog({ trace, currentStep }: TraceLogProps) {
                       className={`border-b border-white transition-colors ${isMiss
                         ? "bg-rose-50/80 font-medium"
                         : "bg-emerald-50/80 font-medium"
-                        } ${isLatest ? "ring-3 ring-inset ring-blue-400" : ""}`}
+                        } ${isLatest ? "ring-3 ring-inset ring-yellow-400" : ""}`}
                     >
                       <td className="py-2 px-3 font-semibold">#{entry.cycle}</td>
                       <td className="py-2 px-3 font-semibold">
