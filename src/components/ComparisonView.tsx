@@ -78,7 +78,7 @@ export default function ComparisonView({
         <StatsPanel stats={mruResult?.stats ?? null} />
 
         <TraceLog
-          trace={lruResult?.trace || []}
+          trace={mruResult?.trace || []}
           currentStep={currentStep}
         />
 
