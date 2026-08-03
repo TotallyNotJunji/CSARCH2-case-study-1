@@ -24,16 +24,6 @@ export default function TraceLog({ trace, currentStep }: TraceLogProps) {
   // slice trace entries to current step only
   const visibleEntries = trace.slice(0, currentStep);
 
-  // auto-scroll to current step
-  useEffect(() => {
-    if (activeRowRef.current) {
-      activeRowRef.current.scrollIntoView({
-        behavior: "smooth",
-        block: "nearest",
-      });
-    }
-  }, [currentStep]);
-
   return (
     <div className="flex flex-col gap-4 bg-white p-4 text-xs w-full">
       <button
