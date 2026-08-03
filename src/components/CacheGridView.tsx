@@ -55,8 +55,8 @@ export default function CacheGridView({
           <span className="flex items-center gap-1">
             <span
               className={`h-2.5 w-2.5 border inline-block ${policy === "LRU"
-                  ? "bg-amber-200 border-amber-400"
-                  : "bg-emerald-200 border-emerald-400"
+                  ? "bg-purple-200 border-purple-400"
+                  : "bg-blue-200 border-blue-400"
                 }`}
             ></span>
             {policy === "LRU" ? "LRU Target" : "MRU Target"}
@@ -95,7 +95,7 @@ export default function CacheGridView({
               return (
                 <tr key={setIndex} >
                   <td className={`py-1 px-1 border font-bold transition-colors ${isHighlightedSet
-                      ? "border-blue-400 text-blue-800 bg-blue-200/80"
+                      ? "border-yellow-300 text-yellow-800 bg-yellow-100"
                       : "border-neutral-200 text-neutral-700 bg-neutral-50"
                     }`}
                   >
@@ -107,23 +107,23 @@ export default function CacheGridView({
                     const isTarget = blockIndex === targetIndex && cacheLine?.valid
                     
                     let borderStyle = isHighlightedSet
-                      ? "border-blue-300"
+                      ? "border-yellow-300"
                       : "border-neutral-200";
                     let bgStyle = isHighlightedSet
-                      ? "bg-blue-50/60 text-neutral-500"
+                      ? "bg-yellow-100 text-neutral-500"
                       : "bg-neutral-50/50 text-neutral-400";
                     
                     if (cacheLine?.valid) {
                       if (isTarget) {
                         bgStyle =
                           policy === "LRU"
-                            ? "bg-amber-100/90 text-amber-900 font-semibold"
-                            : "bg-emerald-100/90 text-emerald-900 font-semibold";
+                            ? "bg-purple-100/90 text-purple-900 font-semibold"
+                            : "bg-blue-100/90 text-blue-900 font-semibold";
                         borderStyle =
-                          policy === "LRU" ? "border-amber-400" : "border-emerald-400";
+                          policy === "LRU" ? "border-purple-400" : "border-blue-400";
                       } else {
                         bgStyle = isHighlightedSet
-                          ? "bg-blue-100/40 text-neutral-800"
+                          ? "bg-yellow-100 text-neutral-800"
                           : "bg-white text-neutral-800";
                       }
                     }
