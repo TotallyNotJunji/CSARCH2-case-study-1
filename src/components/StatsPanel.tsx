@@ -47,7 +47,7 @@ export default function StatsPanel({ stats }: StatsPanelProps) {
         <div className="overflow-x-auto">
           <table className="w-full border-collapse text-left text-xs">
           <thead>
-            <tr className="bg-neutral-100 font-medium border-b border-neutral-200">
+            <tr className="bg-gray-300 font-medium">
               <th className="py-2 px-3">Metric</th>
               <th className="py-2 px-3 text-right">Value</th>
             </tr>
