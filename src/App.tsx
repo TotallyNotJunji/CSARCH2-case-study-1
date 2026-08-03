@@ -74,6 +74,33 @@ export default function App() {
   const totalSteps = trace.length;
   const activeStep = showFinal ? totalSteps : currentStep;
 
+  const lruResult: SimulationResult = useMemo(() => runSimulation(trace, {
+    ...config,
+    replacementPolicy: "LRU"
+  }, new LRUPolicy()
+  ), [trace, config]
+  );
+  const mruResult: SimulationResult = useMemo(() => runSimulation(trace, {
+    ...config,
+    replacementPolicy: "MRU"
+  }, new MRUPolicy()
+  ), [trace, config]
+  );
+
+  const lruSets: Set[] = useMemo(() => computeSetsAtStep(trace, {
+    ...config,
+    replacementPolicy: "LRU"
+  }, new LRUPolicy(), activeStep
+  ), [trace, config, activeStep]
+  );
+
+  const mruSets: Set[] = useMemo(() => computeSetsAtStep(trace, {
+    ...config,
+    replacementPolicy: "MRU"
+  }, new MRUPolicy(), activeStep
+  ), [trace, config, activeStep]
+  );
+
   
 
   return (
