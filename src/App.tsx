@@ -41,6 +41,41 @@ function computeSetsAtStep(
 }
 
 export default function App() {
+
+  const [config, setConfig] = useState<CacheConfig>({
+    blockSize: 2,
+    blockCount: 5,
+    setCount: 2,
+    ways: SETSIZE,
+    readPolicy: "load-through",
+    replacementPolicy: "LRU",
+    hitTime: 1,
+    missPenalty: 10,
+  });
+
+  const [testCase, setTestCase] = useState<TestCase>("sequential");
+
+  const [currentStep, setCurrentStep] = useState(0);
+  const [running, setRunning] = useState(false);
+  const [showFinal, setShowFinal] = useState(false);
+
+  const trace = useMemo(() => {
+    switch (testCase) {
+      case "mid-repeat-reverse":
+        return generateMidRepeatReverse(config.blockCount);
+      case "random":
+        return generateRandom(42);
+      case "sequential":
+      default:
+        return generateSequential(config.blockCount);
+    }
+  }, [testCase, config.blockCount]);
+
+  const totalSteps = trace.length;
+  const activeStep = showFinal ? totalSteps : currentStep;
+
+  
+
   return (
     <h1 className="flex w-screen h-screen justify-center items-center text-3xl font-bold text-black">
       <ConfigPanel />
