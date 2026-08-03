@@ -31,10 +31,12 @@ export interface CacheConfig {
 
 /** A single cache line (one "way" within a set).
  *  - tag: the block address tag (null if empty)
+ *  - memBlockNumber: the original main-memory block number stored in this line (null if empty)
  *  - valid: whether the line holds valid data
  *  - dirty: whether the line has been written to (unused in read-only traces but included for completeness)
  *  - lastUsed: incrementing timestamp used to determine LRU/MRU order */
 export interface CacheLine {
+  memBlockNumber: number | null
   tag: number | null
   valid: boolean
   dirty: boolean

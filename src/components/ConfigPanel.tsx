@@ -4,31 +4,40 @@
 import { useState } from "react";
 import { CacheConfig, ReadPolicy, SETSIZE, TestCase } from "../engine/types";
 
-// optional props
-interface Props {
-  cache_props?: CacheConfig;
-  test_props?: TestCase;
+interface ConfigPanelProps {
+  config?: CacheConfig;
+  testCase?: TestCase;
+  onConfigChange: (newConfig: CacheConfig, newTestCase: TestCase) => void;
 }
 
 const BLOCKSIZELIMIT = 5;
 const BLOCKCOUNTLIMIT = BLOCKSIZELIMIT;
 
-export default function ConfigPanel({ cache_props, test_props }: Props) {
+export default function ConfigPanel({ 
+  config, 
+  testCase: initialTestCase, 
+  onConfigChange 
+}: ConfigPanelProps) {
   //state constants, accepts props if given
   const [blockSizeExp, setBlockSizeExp] = useState<number>(
-    cache_props?.blockSize ?? 1,
+    // cache_props?.blockSize ?? 1,
+    config?.blockSize ?? 1,
   );
   const [blockCountExp, setBlockCountExp] = useState<number>(
-    cache_props?.blockCount ?? 3,
+    config?.blockCount ?? 3,
   );
-  const [readPolicy, setReadPolicy] = useState<ReadPolicy | null>(
-    cache_props?.readPolicy ?? null,
+  const [readPolicy, setReadPolicy] = useState<ReadPolicy>(
+    config?.readPolicy ?? "load-through",
   );
-  const [hitTime, setHitTime] = useState<number>(cache_props?.hitTime ?? 0);
+  const [hitTime, setHitTime] = useState<number>(
+    config?.hitTime ?? 0
+  );
   const [missPenalty, setMissPenalty] = useState<number>(
-    cache_props?.missPenalty ?? 0,
+    config?.missPenalty ?? 0,
   );
-  const [testCase, setTestCase] = useState<TestCase | null>(test_props ?? null);
+  const [testCase, setTestCase] = useState<TestCase>(
+    initialTestCase ?? "sequential"
+  );
 
   //computed constants
   const blockSize = Math.pow(2, blockSizeExp);
@@ -44,7 +53,19 @@ export default function ConfigPanel({ cache_props, test_props }: Props) {
 
   //TO-DO: implement this later
   const handleStartSimulation = () => {
-    // Placeholder
+    const updatedConfig: CacheConfig = {
+      ...config,
+      blockSize,
+      blockCount,
+      setCount,
+      ways: SETSIZE, // Fixed at 8-way BSA for Machine 9
+      readPolicy,
+      replacementPolicy: config?.replacementPolicy || "LRU",
+      hitTime: Math.max(0, hitTime),
+      missPenalty: Math.max(0, missPenalty),
+    };
+    onConfigChange(updatedConfig, testCase);
+
     console.log("Starting simulation with:", {
       blockSize,
       blockCount,
