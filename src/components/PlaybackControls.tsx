@@ -1,5 +1,3 @@
-// Playback navigation: play/pause auto-advance, step forward, reset to step 0,
-// scrubber slider (0..totalSteps), toggle between step-by-step and final snapshot view.
 interface PlaybackControlsProps {
   currentStep: number; // current frame
   totalSteps: number; // total frames
@@ -62,6 +60,16 @@ export default function PlaybackControls({
           </button>
 
           <button
+            onClick={() => onStepChange(Math.max(0, currentStep - 1))}
+            disabled={noSimulation || running || showFinal || currentStep <= 0}
+            className="px-3 py-1.5 rounded border border-neutral-300 bg-neutral-50 hover:bg-neutral-100 disabled:opacity-40 disabled:cursor-not-allowed font-medium text-neutral-700 transition"
+            title="Step Back 1 Frame"
+          >
+            {/* less than */}
+            &lt;
+          </button>
+
+          <button
             onClick={onPlayPause}
             disabled={noSimulation || isAtEnd || showFinal}
             className={`px-4 py-1.5 rounded border font-semibold text-white transition ${running
@@ -72,6 +80,17 @@ export default function PlaybackControls({
             {running ? "Pause" : "Play"}
           </button>
 
+          <button
+            onClick={() => onStepChange(Math.min(totalSteps, currentStep + 1))}
+            disabled={noSimulation || running || showFinal || isAtEnd}
+            className="px-3 py-1.5 rounded border border-neutral-300 bg-neutral-50 hover:bg-neutral-100 disabled:opacity-40 disabled:cursor-not-allowed font-medium text-neutral-700 transition"
+            title="Step Forward 1 Frame"
+          >
+            {/* greater than */}
+            &gt;
+          </button>
+
+          {/* Final Snapshot Toggle */}
           <button
             onClick={onToggleShowFinal}
             disabled={noSimulation}
