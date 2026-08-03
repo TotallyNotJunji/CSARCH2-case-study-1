@@ -25,53 +25,62 @@ export default function PlaybackControls({
   const isAtEnd = currentStep >= totalSteps;
   // pause simulation
   const noSimulation = totalSteps === 0;
-  
+
   return (
     <div className="flex flex-col mx-auto m-4 gap-3 rounded-lg border border-neutral-200 bg-neutral-50 p-6 text-xs w-full shadow-sm">
-      {/* Scrubber Slider */}
+      {/* Slider */}
       <div className="flex items-center gap-3 pt-1">
         <span className="min-w-[80px]">
-          Step 1/n
+          {showFinal ? "Final View" : `Step ${currentStep} / ${totalSteps}`}
         </span>
 
         <input
           type="range"
           min={0}
-          max={1}
-          value={-1}
+          max={totalSteps || 1}
+          value={showFinal ? totalSteps : currentStep}
+          onChange={(e) => onStepChange(Number(e.target.value))}
+          disabled={noSimulation || running || showFinal}
           className="w-full accent-gray-600 cursor-pointer disabled:cursor-not-allowed h-1.5 rounded-xl"
         />
 
+        <span className="text-neutral-500 text-xs min-w-[40px] text-right">
+          {noSimulation
+            ? "0%"
+            : `${Math.round(((showFinal ? totalSteps : currentStep) / totalSteps) * 100)}%`}
+        </span>
       </div>
-      {/* Top Bar: Action Buttons & Mode Toggle */}
       <div className="flex flex-wrap items-center justify-center gap-2">
         <div className="flex items-center gap-2">
-          {/* Reset */}
           <button
-            // onClick={}
-            // disabled={}
+            onClick={onReset}
+            disabled={noSimulation || (currentStep === 0 && !running && !showFinal)}
             className="px-3 py-1.5 rounded border border-neutral-300 bg-neutral-50 hover:bg-neutral-100 disabled:opacity-40 disabled:cursor-not-allowed font-medium text-neutral-700 transition"
             title="Reset to Step 0"
           >
             Reset
           </button>
 
-          {/* Play / Pause */}
           <button
-            // onClick={}
-            // disabled={}
-            className={`px-4 py-1.5 rounded border font-semibold text-black transition`}
+            onClick={onPlayPause}
+            disabled={noSimulation || isAtEnd || showFinal}
+            className={`px-4 py-1.5 rounded border font-semibold text-white transition ${running
+              ? "bg-amber-500 border-amber-600"
+              : "bg-blue-600 border-blue-700 disabled:bg-neutral-300 disabled:border-neutral-300 disabled:cursor-not-allowed"
+              }`}
           >
-            Play
+            {running ? "Pause" : "Play"}
           </button>
 
-          {/* View Mode Toggle */}
           <button
-            // onClick={}
-            // disabled={}
-            className={`px-3 py-1.5 rounded border font-semibold transition disabled:opacity-40 disabled:cursor-not-allowed`}
+            onClick={onToggleShowFinal}
+            disabled={noSimulation}
+            className={`px-3 py-1.5 rounded border font-semibold transition disabled:opacity-40 disabled:cursor-not-allowed ${showFinal
+              ? "bg-indigo-600 border-indigo-700 text-white"
+              : "bg-neutral-100 border-neutral-300 text-neutral-700 hover:bg-neutral-200"
+              }`}
           >
-            Final
+            {showFinal ? "Final Snapshot" : "Step-by-Step"}
           </button>
         </div>
       </div>
