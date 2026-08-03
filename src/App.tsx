@@ -122,11 +122,11 @@ export default function App() {
   }, [running, currentStep, totalSteps]);
 
   const handleConfigChange = (newConfig: CacheConfig, newTestCase: TestCase) => {
-    setRunning(false);
-    setShowFinal(false);
-    setCurrentStep(0);
     setConfig(newConfig);
     setTestCase(newTestCase);
+    setCurrentStep(0);
+    setShowFinal(false);
+    setRunning(true);
   };
 
   const handlePlayPause = () => {
@@ -157,7 +157,7 @@ export default function App() {
         <div className="max-w-xl mx-auto w-full">
           <ConfigPanel 
             config={config} 
-            testCase="sequential" 
+            testCase={testCase} 
             onConfigChange={handleConfigChange}
           />
           <PlaybackControls
