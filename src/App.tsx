@@ -8,7 +8,6 @@ import {
   SimulationResult,
   Set,
   SETSIZE,
-  ReplacementPolicy,
 } from "./engine/types";
 import {
   runSimulation,
@@ -153,8 +152,38 @@ export default function App() {
   }
 
   return (
-    <h1 className="flex w-screen h-screen justify-center items-center text-3xl font-bold text-black">
-      <ConfigPanel />
-    </h1>
+    <div className="min-h-screen justify-center bg-neutral-100 p-6 flex flex-col xl:flex-row gap-6">
+      <div>
+        <div className="max-w-xl mx-auto w-full">
+          <ConfigPanel 
+            config={config} 
+            testCase="sequential" 
+            onConfigChange={handleConfigChange}
+          />
+          <PlaybackControls
+            currentStep={currentStep}
+            totalSteps={totalSteps}
+            running={running}
+            showFinal={showFinal}
+            onPlayPause={handlePlayPause}
+            onReset={handleReset}
+            onToggleShowFinal={handleToggleShowFinal}
+            onStepChange={handleStepChange}
+          />
+        </div>
+      </div>
+
+      <div>
+        <div className="max-w-7xl mx-auto w-full">
+          <ComparisonView
+            lruResult={lruResult}
+            mruResult={mruResult}
+            lruSets={lruSets}
+            mruSets={mruSets}
+            currentStep={activeStep}
+          />
+        </div>
+      </div>
+    </div>
   );
 }
