@@ -73,7 +73,7 @@ export default function CacheGridView({
       </div>
       {/* Table Cells */}
       <div>
-        <table className="w-full border-collapse text-center text-[10px]">
+        <table className="w-full table-fixed border-collapse text-center text-[10px]">
           <thead>
             <tr className="bg-neutral-100 font-medium">
               <th className="py-1 px-1 border w-16">Set</th>
