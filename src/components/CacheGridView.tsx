@@ -72,15 +72,15 @@ export default function CacheGridView({
         </div>
       </div>
       {/* Table Cells */}
-      <div className="overflow-x-auto">
-        <table className="w-full border-collapse text-center">
+      <div>
+        <table className="w-full border-collapse text-center text-[10px]">
           <thead>
             <tr className="bg-neutral-100 font-medium">
-              <th className="py-2 px-1 border w-16">Set</th>
+              <th className="py-1 px-1 border w-16">Set</th>
               {Array.from({ length: blocks ?? 0 }).map((_, i) => (
                 <th
                   key={i}
-                  className="py-2 px-1 border min-w-[55px]"
+                  className="py-1 px-1 border min-w-[45px]"
                 >Block {i}</th>
               ))}
             </tr>
@@ -94,7 +94,7 @@ export default function CacheGridView({
 
               return (
                 <tr key={setIndex} >
-                  <td className={`py-2 px-1 border font-bold transition-colors ${isHighlightedSet
+                  <td className={`py-1 px-1 border font-bold transition-colors ${isHighlightedSet
                       ? "border-blue-400 text-blue-800 bg-blue-200/80"
                       : "border-neutral-200 text-neutral-700 bg-neutral-50"
                     }`}
@@ -129,7 +129,7 @@ export default function CacheGridView({
                     }
                     return (
                       <td key={blockIndex}
-                        className={`py-1.5 px-1 border transition-colors ${borderStyle} ${bgStyle}`}
+                        className={`py-1 px-1 border transition-colors ${borderStyle} ${bgStyle}`}
                       >
                         <div className="flex flex-col items-center">
                           <span className="font-semibold">
