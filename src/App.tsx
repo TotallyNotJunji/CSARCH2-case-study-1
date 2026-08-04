@@ -180,35 +180,40 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen justify-center bg-neutral-100 p-6 flex flex-col xl:flex-row gap-6">
-      <div>
-        <div className="max-w-xl mx-auto w-full">
-          <ConfigPanel
-            config={config}
-            testCase={testCase}
-            onConfigChange={handleConfigChange}
-          />
-          <PlaybackControls
-            currentStep={currentStep}
-            totalSteps={totalSteps}
-            running={running}
-            showFinal={showFinal}
-            onPlayPause={handlePlayPause}
-            onReset={handleReset}
-            onToggleShowFinal={handleToggleShowFinal}
-            onStepChange={handleStepChange}
+    <div className="flex-1 min-h-screen justify-evenly bg-neutral-100 p-6 flex flex-col gap-6">
+      <div className="border border-neutral-200 bg-neutral-50 shadow-sm flex py-15 w-full rounded-xl text-[67px] truncate justify-center items-center">
+        8-Way BSA + LRU vs. 8-Way BSA + MRU
+      </div>
+      <div className="flex flex-row justify-evenly">
+        <div className="flex flex-row justify-center">
+          <div className="max-w-xl mx-auto w-full">
+            <ConfigPanel
+              config={config}
+              testCase={testCase}
+              onConfigChange={handleConfigChange}
+            />
+            <PlaybackControls
+              currentStep={currentStep}
+              totalSteps={totalSteps}
+              running={running}
+              showFinal={showFinal}
+              onPlayPause={handlePlayPause}
+              onReset={handleReset}
+              onToggleShowFinal={handleToggleShowFinal}
+              onStepChange={handleStepChange}
+            />
+          </div>
+        </div>
+
+        <div className="max-w-7xl w-full">
+          <ComparisonView
+            lruResult={lruResult}
+            mruResult={mruResult}
+            lruSets={lruSets}
+            mruSets={mruSets}
+            currentStep={activeStep}
           />
         </div>
-      </div>
-
-      <div className="max-w-7xl mx-auto w-full">
-        <ComparisonView
-          lruResult={lruResult}
-          mruResult={mruResult}
-          lruSets={lruSets}
-          mruSets={mruSets}
-          currentStep={activeStep}
-        />
       </div>
     </div>
   );
