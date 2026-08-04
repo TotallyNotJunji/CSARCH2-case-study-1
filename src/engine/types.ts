@@ -17,7 +17,10 @@ export type TestCase = 'sequential' | 'mid-repeat-reverse' | 'random'
  *  - readPolicy: load-through or non-load-through
  *  - replacementPolicy: LRU or MRU
  *  - hitTime: cycles for a cache hit
- *  - missPenalty: additional cycles for a cache miss */
+ *  - memoryAccessTime: cycles to transfer ONE word from main memory to cache
+ *
+ *  Note: miss penalty is NOT stored here — it's fully derived from blockSize,
+ *  hitTime, memoryAccessTime, and readPolicy. See computeMissPenalty in stats.ts. */
 export interface CacheConfig {
   blockSize: number
   blockCount: number
@@ -26,7 +29,7 @@ export interface CacheConfig {
   readPolicy: ReadPolicy
   replacementPolicy: ReplacementPolicy
   hitTime: number
-  missPenalty: number
+  memoryAccessTime: number
 }
 
 /** A single cache line (one "way" within a set).
@@ -70,9 +73,12 @@ export interface TraceEntry {
  *  - hits / misses: raw counts
  *  - hitRate / missRate: fractions (0–1)
  *  - totalHitTime: hits × hitTime
- *  - totalMissPenalty: misses × missPenalty
- *  - totalAccessTime: totalHitTime + totalMissPenalty
- *  - amat: average memory access time = hitTime + (missRate × missPenalty) */
+ *  - totalAccessTime: word-level total access time, per the lecture slides —
+ *    hits×blockSize×hitTime + misses×blockSize×(memoryAccessTime+hitTime) + misses×hitTime
+ *    (non-load-through), or hits×blockSize×hitTime + misses×(memoryAccessTime+hitTime)
+ *    (load-through)
+ *  - amat: average memory access time = hitRate×hitTime + missRate×missPenalty
+ *    (missPenalty is derived — see computeMissPenalty in stats.ts) */
 export interface Stats {
   totalAccesses: number
   hits: number
@@ -80,7 +86,6 @@ export interface Stats {
   hitRate: number
   missRate: number
   totalHitTime: number
-  totalMissPenalty: number
   totalAccessTime: number
   amat: number
 }

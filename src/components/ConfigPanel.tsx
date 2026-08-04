@@ -1,8 +1,11 @@
 // Renders cache parameter inputs (block size, block count, set count, read policy,
-// hit time, miss penalty) and a test-case selector (sequential / mid-repeat-reverse / random).
+// hit time, memory access time) and a test-case selector
+// (sequential / mid-repeat-reverse / random). Miss penalty is DERIVED (read-only
+// display) from hitTime, blockSize, memoryAccessTime, and readPolicy — not typed in.
 // Accepts CacheConfig + TestCase props and calls onChange / onTestCaseChange on edit.
 import { useState } from "react";
 import { CacheConfig, ReadPolicy, SETSIZE, TestCase } from "../engine/types";
+import { computeMissPenalty } from "../engine/stats";
 
 interface ConfigPanelProps {
   config?: CacheConfig;
@@ -20,7 +23,6 @@ export default function ConfigPanel({
 }: ConfigPanelProps) {
   //state constants, accepts props if given
   const [blockSizeExp, setBlockSizeExp] = useState<number>(
-    // cache_props?.blockSize ?? 1,
     config?.blockSize ?? 1,
   );
   const [blockCountExp, setBlockCountExp] = useState<number>(
@@ -30,8 +32,8 @@ export default function ConfigPanel({
     config?.readPolicy ?? "load-through",
   );
   const [hitTime, setHitTime] = useState<number>(config?.hitTime ?? 0);
-  const [missPenalty, setMissPenalty] = useState<number>(
-    config?.missPenalty ?? 0,
+  const [memoryAccessTime, setMemoryAccessTime] = useState<number>(
+    config?.memoryAccessTime ?? 0,
   );
   const [testCase, setTestCase] = useState<TestCase>(
     initialTestCase ?? "sequential",
@@ -41,6 +43,14 @@ export default function ConfigPanel({
   const blockSize = Math.pow(2, blockSizeExp);
   const blockCount = Math.pow(2, blockCountExp);
   const setCount = blockCount / SETSIZE;
+
+  // miss penalty is fully derived — never typed in by the user
+  const missPenalty = computeMissPenalty({
+    blockSize,
+    hitTime,
+    memoryAccessTime,
+    readPolicy,
+  });
 
   // function for handling the change of blockCount
   // since setCount should not exceed blockCount
@@ -52,7 +62,7 @@ export default function ConfigPanel({
   //TO-DO: implement this later
   const handleStartSimulation = () => {
     if (hitTime >= missPenalty) {
-      alert("Hit time should be less than miss penalty time.");
+      alert("Cache access time should be less than miss penalty time.");
       return;
     }
     const updatedConfig: CacheConfig = {
@@ -64,7 +74,7 @@ export default function ConfigPanel({
       readPolicy,
       replacementPolicy: config?.replacementPolicy || "LRU",
       hitTime: Math.max(0, hitTime),
-      missPenalty: Math.max(0, missPenalty),
+      memoryAccessTime: Math.max(0, memoryAccessTime),
     };
     onConfigChange(updatedConfig, testCase);
 
@@ -74,7 +84,8 @@ export default function ConfigPanel({
       setCount,
       readPolicy,
       hitTime,
-      missPenalty,
+      memoryAccessTime,
+      missPenalty, // derived, shown for reference
       testCase,
     });
   };
@@ -175,7 +186,7 @@ export default function ConfigPanel({
             htmlFor="hit_time"
             className="w-44 text-sm font-medium text-neutral-700"
           >
-            Hit time:
+            Cache access time:
           </label>
           <input
             type="number"
@@ -186,26 +197,41 @@ export default function ConfigPanel({
               setHitTime(Number(e.target.value));
             }}
             min={0}
-            max={missPenalty - 1}
           />
         </div>
 
-        {/* Miss penalty */}
+        {/* Memory access time (per word) */}
         <div className="flex items-center gap-3">
           <label
-            htmlFor="miss_penalty"
+            htmlFor="memory_access_time"
             className="w-44 text-sm font-medium text-neutral-700"
           >
-            Miss penalty:
+            Memory access time:
           </label>
           <input
             type="number"
-            id="miss_penalty"
-            value={missPenalty}
+            id="memory_access_time"
+            value={memoryAccessTime}
             className="w-full rounded border text-xs border-neutral-300 px-3 py-1.5 text-neutral-800 focus:outline-none focus:ring-2 focus:ring-neutral-400"
-            onChange={(e) => setMissPenalty(Number(e.target.value))}
+            onChange={(e) => setMemoryAccessTime(Number(e.target.value))}
             min={0}
           />
+        </div>
+
+        {/* Miss penalty — derived, read-only */}
+        <div className="flex items-center gap-3">
+          <label className="w-44 text-sm font-medium text-neutral-700">
+            Miss penalty (calculated):
+          </label>
+          <span className="text-sm text-neutral-800 font-semibold">
+            {missPenalty}
+            <span className="text-neutral-500 font-normal">
+              {" "}
+              ({readPolicy === "non-load-through"
+                ? `2×${hitTime} + ${blockSize}×${memoryAccessTime}`
+                : `${hitTime} + ${memoryAccessTime}`})
+            </span>
+          </span>
         </div>
 
         {/* Test case */}

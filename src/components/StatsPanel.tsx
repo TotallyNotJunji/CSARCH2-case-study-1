@@ -1,5 +1,5 @@
-// Displays the seven required stats in a table: total accesses, hits, misses,
-// hit rate, miss rate, AMAT, total access time. Shows placeholder when stats prop is null.
+// Displays the required stats in a table: total accesses, hits, misses,
+// hit rate, miss rate, total access time, AMAT. Shows placeholder when stats prop is null.
 
 import { useState } from "react";
 import { Stats } from "../engine/types";
@@ -9,16 +9,14 @@ import { Stats } from "../engine/types";
  *  - hits / misses: raw counts
  *  - hitRate / missRate: fractions (0–1)
  *  - totalHitTime: hits × hitTime
- *  - totalMissPenalty: misses × missPenalty
- *  - totalAccessTime: totalHitTime + totalMissPenalty
- *  - amat: average memory access time = hitTime + (missRate × missPenalty)
+ *  - totalAccessTime: slide-accurate word-level total access time
+ *  - amat: average memory access time = hitRate×hitTime + missRate×missPenalty
+ *    (missPenalty is derived, not stored — see computeMissPenalty in stats.ts)
  */
 interface StatsPanelProps {
   stats: Stats | null;
 }
 
-// Displays the seven required stats in a table: total accesses, hits, misses,
-// hit rate, miss rate, AMAT, total access time. Shows placeholder when stats prop is null.
 export default function StatsPanel({ stats }: StatsPanelProps) {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -87,12 +85,6 @@ export default function StatsPanel({ stats }: StatsPanelProps) {
               <td className="py-2 px-3 font-medium">Total Access Time</td>
               <td className="py-2 px-3 font-normal text-right">
                 {stats.totalAccessTime}
-              </td>
-            </tr>
-            <tr>
-              <td className="py-2 px-3 font-medium">Total Miss Penalty</td>
-              <td className="py-2 px-3 font-normal text-right">
-                {stats.totalMissPenalty}
               </td>
             </tr>
             <tr>
