@@ -61,8 +61,8 @@ export default function ConfigPanel({
 
   //TO-DO: implement this later
   const handleStartSimulation = () => {
-    if (hitTime >= missPenalty) {
-      alert("Cache access time should be less than miss penalty time.");
+    if (hitTime >= memoryAccessTime) {
+      alert("Cache access time should be less than Memory access time.");
       return;
     }
     const updatedConfig: CacheConfig = {
