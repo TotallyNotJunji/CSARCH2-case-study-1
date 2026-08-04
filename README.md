@@ -4,6 +4,10 @@
 
 https://csarch-2-case-study-1.vercel.app/?fbclid=IwY2xjawTeZG5leHRuA2FlbQIxMQBzcnRjBmFwcF9pZAEwAAEeMch8huglsmq-qnWOJkzOljirOqx9eykaLtS9M-TEO2tgVMoBodWSR4atY3o_aem_WRGwC27zxs9LRsUSUmMPng
 
+## Youtube Demo
+
+https://youtu.be/mBf50dkN5P0?si=g2D8cifVrHT1KQZD
+
 ## Specifications
 
 **Machine 9 — 8-Way Block Set-Associative (BSA) Cache with LRU vs MRU**
@@ -21,8 +25,8 @@ This simulator implements two 8-way set-associative caches that differ only in t
 | Main memory            | 1024 blocks fixed                    |
 | Read policy            | Load-through **or** Non-load-through |
 | Replacement policy     | LRU **or** MRU (run simultaneously)  |
-| Cache Access time      | Parameterised                        |
-| Memory Access time     | Parameterised                        |
+| Hit time (cycles)      | Parameterised                        |
+| Miss penalty (cycles)  | Parameterised                        |
 
 ### Test Cases
 
@@ -71,7 +75,37 @@ Example (n = 4): `0,1,2,3,4,5,6,7, 0,1,2,3,4,5,6,7`
 
 ## Test Results
 
-(To be filled with tables/charts for Test Cases A, B, C for both LRU and MRU.)
+For all test cases, assume the following parameters:
+
+- <b>BlockSize</b> = 32
+- <b>BlockCount</b> = 16
+- <b>SetCount</b> = 2
+- <b>Cache Access Time</b> = 1ns
+- <b>Memory Access Time</b> = 10ns
+
+### Load Through, Sequential
+
+![Result](./screenshots/sequential/load-through/01/SEQlt01_bs32-sc2_ht1ns-mp10ns.png)
+
+### Non-Load Through, Sequential
+
+![Result](./screenshots/sequential/non-load-through/01/SEQnlt01_bs32-sc2_ht1ns-mp10ns.png)
+
+### Load Through, Mid-repeat-reverse
+
+![Result](./screenshots/mid-repeat-reverse/load-through/01/MRRlt01_bs32-sc2_ht1ns-mp10ns.png)
+
+### Non-Load Through, Mid-repeat-reverse
+
+![Result](./screenshots/mid-repeat-reverse/non-load-through/01/MRRnlt01_bs32-sc2_ht1ns-mp10ns.png)
+
+### Load Through, Random
+
+![Result](./screenshots/random/load-through/01/RNDlt01_bs32-sc2_ht1ns-mp10ns.png)
+
+### Non-Load Through, Random
+
+![Result](./screenshots/random/non-load-through/01/RNDnlt01_bs32-sc2_ht1ns-mp10ns.png)
 
 ## Analysis
 
