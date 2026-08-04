@@ -21,8 +21,8 @@ This simulator implements two 8-way set-associative caches that differ only in t
 | Main memory            | 1024 blocks fixed                    |
 | Read policy            | Load-through **or** Non-load-through |
 | Replacement policy     | LRU **or** MRU (run simultaneously)  |
-| Hit time (cycles)      | Parameterised                        |
-| Miss penalty (cycles)  | Parameterised                        |
+| Cache Access time      | Parameterised                        |
+| Memory Access time     | Parameterised                        |
 
 ### Test Cases
 
