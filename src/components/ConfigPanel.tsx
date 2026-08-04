@@ -13,10 +13,10 @@ interface ConfigPanelProps {
 const BLOCKSIZELIMIT = 5;
 const BLOCKCOUNTLIMIT = BLOCKSIZELIMIT;
 
-export default function ConfigPanel({ 
-  config, 
-  testCase: initialTestCase, 
-  onConfigChange 
+export default function ConfigPanel({
+  config,
+  testCase: initialTestCase,
+  onConfigChange,
 }: ConfigPanelProps) {
   //state constants, accepts props if given
   const [blockSizeExp, setBlockSizeExp] = useState<number>(
@@ -29,14 +29,12 @@ export default function ConfigPanel({
   const [readPolicy, setReadPolicy] = useState<ReadPolicy>(
     config?.readPolicy ?? "load-through",
   );
-  const [hitTime, setHitTime] = useState<number>(
-    config?.hitTime ?? 0
-  );
+  const [hitTime, setHitTime] = useState<number>(config?.hitTime ?? 0);
   const [missPenalty, setMissPenalty] = useState<number>(
     config?.missPenalty ?? 0,
   );
   const [testCase, setTestCase] = useState<TestCase>(
-    initialTestCase ?? "sequential"
+    initialTestCase ?? "sequential",
   );
 
   //computed constants
@@ -53,6 +51,10 @@ export default function ConfigPanel({
 
   //TO-DO: implement this later
   const handleStartSimulation = () => {
+    if (hitTime >= missPenalty) {
+      alert("Hit time should be less than miss penalty time.");
+      return;
+    }
     const updatedConfig: CacheConfig = {
       ...config,
       blockSize,
@@ -178,11 +180,13 @@ export default function ConfigPanel({
           <input
             type="number"
             id="hit_time"
+            value={hitTime}
             className="w-full rounded border text-xs border-neutral-300 px-3 py-1.5 text-neutral-800 focus:outline-none focus:ring-2 focus:ring-neutral-400"
             onChange={(e) => {
               setHitTime(Number(e.target.value));
             }}
             min={0}
+            max={missPenalty - 1}
           />
         </div>
 
@@ -197,6 +201,7 @@ export default function ConfigPanel({
           <input
             type="number"
             id="miss_penalty"
+            value={missPenalty}
             className="w-full rounded border text-xs border-neutral-300 px-3 py-1.5 text-neutral-800 focus:outline-none focus:ring-2 focus:ring-neutral-400"
             onChange={(e) => setMissPenalty(Number(e.target.value))}
             min={0}
