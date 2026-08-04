@@ -181,7 +181,7 @@ export default function App() {
 
   return (
     <div className="flex-1 min-h-screen justify-evenly bg-neutral-100 p-6 flex flex-col gap-6">
-      <div className="border border-neutral-200 bg-neutral-50 shadow-sm flex font-bold py-15 w-full rounded-xl text-[67px] truncate justify-center items-center">
+      <div className="border border-neutral-200 bg-neutral-50 shadow-sm flex font-bold py-7 w-full rounded-xl text-[40px] truncate justify-center items-center">
         8-Way BSA + LRU vs. 8-Way BSA + MRU
       </div>
       <div className="flex flex-row justify-evenly">
