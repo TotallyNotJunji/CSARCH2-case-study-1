@@ -48,7 +48,7 @@ export default function App() {
     readPolicy: "load-through",
     replacementPolicy: "LRU",
     hitTime: 1,
-    missPenalty: 10,
+    memoryAccessTime: 10,
   });
 
   const [testCase, setTestCase] = useState<TestCase>("sequential");

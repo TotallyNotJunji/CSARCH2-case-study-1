@@ -73,8 +73,7 @@ export interface TraceEntry {
  *  - hits / misses: raw counts
  *  - hitRate / missRate: fractions (0–1)
  *  - totalHitTime: hits × hitTime
- *  - totalAccessTime: word-level total access time, per the lecture slides —
- *    hits×blockSize×hitTime + misses×blockSize×(memoryAccessTime+hitTime) + misses×hitTime
+ *  - totalAccessTime: hits×blockSize×hitTime + misses×blockSize×(memoryAccessTime+hitTime) + misses×hitTime
  *    (non-load-through), or hits×blockSize×hitTime + misses×(memoryAccessTime+hitTime)
  *    (load-through)
  *  - amat: average memory access time = hitRate×hitTime + missRate×missPenalty
