@@ -31,8 +31,8 @@ export function computeStats(trace: TraceEntry[], config: CacheConfig): Stats {
     // load-through: hits pay hitTime, misses pay missPenalty instead of hitTime
     totalAccessTime = hits * config.hitTime + misses * config.missPenalty;
   }
-
-  const amat = config.hitTime + missRate * config.missPenalty;
+  // ( hitRate*hitTime + missRate*missPenalty)
+  const amat = hitRate * config.hitTime + missRate * config.missPenalty;
 
   const stats: Stats = {
     totalAccesses,
