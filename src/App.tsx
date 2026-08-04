@@ -15,7 +15,7 @@ import {
   accessAddress,
   LRUPolicy,
   MRUPolicy,
-  ReplacementPolicy
+  ReplacementPolicy,
 } from "./engine/cacheSimulator";
 import {
   generateSequential,
@@ -30,7 +30,7 @@ function computeSetsAtStep(
   trace: number[],
   config: CacheConfig,
   policy: ReplacementPolicy,
-  step: number
+  step: number,
 ): Set[] {
   const cache = createCache(config);
   for (let i = 0; i < step && i < trace.length; i++) {
@@ -40,7 +40,6 @@ function computeSetsAtStep(
 }
 
 export default function App() {
-
   const [config, setConfig] = useState<CacheConfig>({
     blockSize: 2,
     blockCount: 5,
@@ -73,31 +72,57 @@ export default function App() {
   const totalSteps = trace.length;
   const activeStep = showFinal ? totalSteps : currentStep;
 
-  const lruResult: SimulationResult = useMemo(() => runSimulation(trace, {
-    ...config,
-    replacementPolicy: "LRU"
-  }, new LRUPolicy()
-  ), [trace, config]
+  const lruResult: SimulationResult = useMemo(
+    () =>
+      runSimulation(
+        trace,
+        {
+          ...config,
+          replacementPolicy: "LRU",
+        },
+        new LRUPolicy(),
+      ),
+    [trace, config],
   );
-  const mruResult: SimulationResult = useMemo(() => runSimulation(trace, {
-    ...config,
-    replacementPolicy: "MRU"
-  }, new MRUPolicy()
-  ), [trace, config]
+  const mruResult: SimulationResult = useMemo(
+    () =>
+      runSimulation(
+        trace,
+        {
+          ...config,
+          replacementPolicy: "MRU",
+        },
+        new MRUPolicy(),
+      ),
+    [trace, config],
   );
 
-  const lruSets: Set[] = useMemo(() => computeSetsAtStep(trace, {
-    ...config,
-    replacementPolicy: "LRU"
-  }, new LRUPolicy(), activeStep
-  ), [trace, config, activeStep]
+  const lruSets: Set[] = useMemo(
+    () =>
+      computeSetsAtStep(
+        trace,
+        {
+          ...config,
+          replacementPolicy: "LRU",
+        },
+        new LRUPolicy(),
+        activeStep,
+      ),
+    [trace, config, activeStep],
   );
 
-  const mruSets: Set[] = useMemo(() => computeSetsAtStep(trace, {
-    ...config,
-    replacementPolicy: "MRU"
-  }, new MRUPolicy(), activeStep
-  ), [trace, config, activeStep]
+  const mruSets: Set[] = useMemo(
+    () =>
+      computeSetsAtStep(
+        trace,
+        {
+          ...config,
+          replacementPolicy: "MRU",
+        },
+        new MRUPolicy(),
+        activeStep,
+      ),
+    [trace, config, activeStep],
   );
 
   useEffect(() => {
@@ -121,7 +146,10 @@ export default function App() {
     return () => clearInterval(timer);
   }, [running, currentStep, totalSteps]);
 
-  const handleConfigChange = (newConfig: CacheConfig, newTestCase: TestCase) => {
+  const handleConfigChange = (
+    newConfig: CacheConfig,
+    newTestCase: TestCase,
+  ) => {
     setConfig(newConfig);
     setTestCase(newTestCase);
     setCurrentStep(0);
@@ -132,32 +160,32 @@ export default function App() {
   const handlePlayPause = () => {
     if (currentStep >= totalSteps) setCurrentStep(0);
     setShowFinal(false);
-    setRunning((prev)=> !prev);
-  }
+    setRunning((prev) => !prev);
+  };
 
   const handleReset = () => {
     setRunning(false);
     setShowFinal(false);
     setCurrentStep(0);
-  }
+  };
 
   const handleToggleShowFinal = () => {
     setRunning(false);
-    setShowFinal((prev)=>!prev);
-  }
+    setShowFinal((prev) => !prev);
+  };
 
   const handleStepChange = (step: number) => {
     setCurrentStep(step);
     setRunning(false);
-  }
+  };
 
   return (
     <div className="min-h-screen justify-center bg-neutral-100 p-6 flex flex-col xl:flex-row gap-6">
       <div>
         <div className="max-w-xl mx-auto w-full">
-          <ConfigPanel 
-            config={config} 
-            testCase={testCase} 
+          <ConfigPanel
+            config={config}
+            testCase={testCase}
             onConfigChange={handleConfigChange}
           />
           <PlaybackControls
@@ -173,16 +201,14 @@ export default function App() {
         </div>
       </div>
 
-      <div>
-        <div className="max-w-7xl mx-auto w-full">
-          <ComparisonView
-            lruResult={lruResult}
-            mruResult={mruResult}
-            lruSets={lruSets}
-            mruSets={mruSets}
-            currentStep={activeStep}
-          />
-        </div>
+      <div className="max-w-7xl mx-auto w-full">
+        <ComparisonView
+          lruResult={lruResult}
+          mruResult={mruResult}
+          lruSets={lruSets}
+          mruSets={mruSets}
+          currentStep={activeStep}
+        />
       </div>
     </div>
   );

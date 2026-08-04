@@ -1,5 +1,9 @@
 # CSARCH2 Case Study 1 — Cache Memory Simulator
 
+## Deployment Link
+
+https://csarch-2-case-study-1.vercel.app/?fbclid=IwY2xjawTeZG5leHRuA2FlbQIxMQBzcnRjBmFwcF9pZAEwAAEeMch8huglsmq-qnWOJkzOljirOqx9eykaLtS9M-TEO2tgVMoBodWSR4atY3o_aem_WRGwC27zxs9LRsUSUmMPng
+
 ## Specifications
 
 **Machine 9 — 8-Way Block Set-Associative (BSA) Cache with LRU vs MRU**
@@ -8,34 +12,37 @@ This simulator implements two 8-way set-associative caches that differ only in t
 
 ### Common Parameters (all test cases)
 
-| Parameter            | Values / Constraints                          |
-|----------------------|-----------------------------------------------|
-| Block size           | Power of 2, ≥ 2 words                         |
-| Number of cache blocks | Power of 2, ≥ 4                             |
-| Associativity        | 8 ways (fixed for Machine 9)                  |
-| Number of sets       | blockCount / 8                                |
-| Main memory          | 1024 blocks fixed                             |
-| Read policy          | Load-through **or** Non-load-through          |
-| Replacement policy   | LRU **or** MRU (run simultaneously)           |
-| Hit time (cycles)    | Parameterised                                 |
-| Miss penalty (cycles)| Parameterised                                 |
+| Parameter              | Values / Constraints                 |
+| ---------------------- | ------------------------------------ |
+| Block size             | Power of 2, ≥ 2 words                |
+| Number of cache blocks | Power of 2, ≥ 4                      |
+| Associativity          | 8 ways (fixed for Machine 9)         |
+| Number of sets         | blockCount / 8                       |
+| Main memory            | 1024 blocks fixed                    |
+| Read policy            | Load-through **or** Non-load-through |
+| Replacement policy     | LRU **or** MRU (run simultaneously)  |
+| Hit time (cycles)      | Parameterised                        |
+| Miss penalty (cycles)  | Parameterised                        |
 
 ### Test Cases
 
 Let **n** = total number of cache blocks.
 
 #### A — Sequential
+
 Access addresses 0 through 2n−1 sequentially, then repeat the sequence a second time.
 Example (n = 4): `0,1,2,3,4,5,6,7, 0,1,2,3,4,5,6,7`
 
 #### B — Mid-repeat blocks then reverse
+
 1. Forward pass 0 … n−1
 2. Forward pass 0 … 2n−1 (twice)
 3. Reverse pass n−1 … 0
 4. Reverse pass 2n−1 … 0 (twice)
-Example (n = 4): `0,1,2,3, 0,1,2,3,4,5,6,7, 0,1,2,3,4,5,6,7, 3,2,1,0, 7,6,5,4,3,2,1,0, 7,6,5,4,3,2,1,0`
+   Example (n = 4): `0,1,2,3, 0,1,2,3,4,5,6,7, 0,1,2,3,4,5,6,7, 3,2,1,0, 7,6,5,4,3,2,1,0, 7,6,5,4,3,2,1,0`
 
 #### C — Random
+
 64 pseudo-random block accesses uniformly distributed in [0, 1023].
 
 ### Required Outputs
@@ -54,7 +61,13 @@ Example (n = 4): `0,1,2,3, 0,1,2,3,4,5,6,7, 0,1,2,3,4,5,6,7, 3,2,1,0, 7,6,5,4,3,
 
 ## Parameters
 
-(To be filled with values used during testing, e.g. block size, number of blocks, read policy, hit/miss latencies.)
+1. Block size (range of 2^1 - 2^5)
+2. Block count (range of 2^3 - 2^5)
+3. Set count (range of 2^0 - 2^2)
+4. Read policy (load through or non-load through)
+5. Hit time
+6. Miss time
+7. Test case (sequential, mid-repeat-reverse, random)
 
 ## Test Results
 
@@ -62,8 +75,11 @@ Example (n = 4): `0,1,2,3, 0,1,2,3,4,5,6,7, 0,1,2,3,4,5,6,7, 3,2,1,0, 7,6,5,4,3,
 
 ## Analysis
 
-(To be filled with detailed discussion of hit/miss rate differences per test case, AMAT differences, and explanation of why LRU or MRU performs better given each access pattern.)
+- [Sequential]
+  - For Load Through and Non-Load Through, LRU and MRU both performed identically and have equal hit rates, total access times, total miss penalties, average memory access times. Both replacement policies have middling hit raates, likely due to the fact that the sequential pattern was performed twice resulting in half misses and half hits.
 
-## Comparison
+- [Mid-repeat-reverse]
+  - For Load Through and Non-Load Through, MRU has higher hit rate, lower total access time, total miss penalty, average memory access time compared to LRU. This is likely due to the fact that MRU does a better job at getting rid of data not likely to be used soon, which works well in a pattern read.
 
-(To be filled with a written comparison of 8-way BSA + LRU vs 8-way BSA + MRU, referencing the results from all three test cases.)
+- [Random]
+  - For Load Through and Non-Load Through, LRU and MRU have equal hit rates, total access times, total miss penalties, average memory access times. Both replacement policies have low hit rates, likely due to the fact that the main memory blocks accessed are very far apart in the memory.
